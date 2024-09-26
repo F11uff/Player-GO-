@@ -20,13 +20,9 @@ type HTTPServer struct {
 }
 
 func DefaultConfig() Config {
-	configPath := os.Getenv("CONFIG_PATH")
+	configPath := "../../config/config.yaml"
 
 	fmt.Println(configPath)
-
-	if configPath == "" {
-		log.Fatal("CONFIG_PATH environment variable not set")
-	}
 
 	if _, err := os.Stat(configPath); os.IsNotExist(err) {
 		log.Fatal("CONFIG_PATH does not exist")

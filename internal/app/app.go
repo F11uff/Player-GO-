@@ -16,11 +16,13 @@ func OpenApp() {
 	fmt.Println(cfg)
 	fmt.Println(cfg.HTTPServer.Address)
 
+	app.Static("/", "../../web/build")
+
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
 
-		app.Get("/src", handler.RegisterHandler)
+		app.Get("/register", handler.RegisterHandler)
 
 		if err := app.Listen(cfg.HTTPServer.Address); err != nil {
 			fmt.Printf("Ошибка запуска сервера: %v\n", err)
