@@ -13,7 +13,7 @@ type User struct {
 }
 
 func (u *User) AddUser(db *sql.DB, user User) error {
-	HashPassword, err := HashPassword("123")
+	HashPassword, err := HashPassword(user.HashPassword)
 
 	if err != nil {
 		return err
