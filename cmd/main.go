@@ -23,9 +23,9 @@ func main() {
 
 	// Пример пользователя
 	user := user.User{
-		Username:     "Jan23234234652456e Doee",
-		Email:        "jane.doe@exaaer234234faerfmplee.com",
-		HashPassword: "123513463456256",
+		Username:     "Amir",
+		Email:        "Amir.doe@example.com",
+		HashPassword: "123456789",
 	}
 
 	// Добавление пользователя

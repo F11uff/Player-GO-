@@ -14,7 +14,7 @@ func OpenApp() {
 	cfg := config.DefaultConfig()
 
 	fmt.Println(cfg)
-	fmt.Println(cfg.HTTPServer.Address)
+	//fmt.Println(cfg.HTTPServerConfig.Address)
 
 	app.Static("/", "../../web/build")
 
@@ -24,7 +24,7 @@ func OpenApp() {
 
 		app.Get("/register", handler.RegisterHandler)
 
-		if err := app.Listen(cfg.HTTPServer.Address); err != nil {
+		if err := app.Listen(cfg.HTTPServerConfig.Address); err != nil {
 			fmt.Printf("Ошибка запуска сервера: %v\n", err)
 		}
 	}()

@@ -1,4 +1,10 @@
 env: "local"
+db:
+  port: "5432"
+  user: "test"
+  db_name: "hw6"
+  password: "12345"
+  ssl_mode: "disable"
 http_server:
   address: "localhost:8080"
   timeout: 5s
