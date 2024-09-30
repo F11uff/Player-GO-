@@ -14,7 +14,7 @@ func OpenApp() {
 	cfg := config.DefaultConfig()
 
 	fmt.Println(cfg)
-	//fmt.Println(cfg.HTTPServerConfig.Address)
+	fmt.Println(cfg.HTTPServerConfig.Address)
 
 	app.Static("/", "../../web/build")
 
