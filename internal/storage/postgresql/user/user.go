@@ -6,14 +6,27 @@ import (
 )
 
 type User struct {
-	Id           uint   `gorm:"primary_key"`
-	Username     string `gorm:"unique;not null"`
-	Email        string `gorm:"unique;not null"`
-	HashPassword string `gorm:"unique;not null"`
+	Username string `json:"userLogin"`
+	Password string `json:"userPassword"`
+	Email    string `json:"userEmail"`
+	Remember bool   `json:"userRemember"`
 }
 
-func (u *User) AddUser(db *sql.DB, user User) error {
-	HashPassword, err := HashPassword(user.HashPassword)
+//	UserLogin    string `json:"userLogin"`    // Логин пользователя
+//	UserPassword string `json:"userPassword"` // Пароль пользователя
+//	UserEmail    string `json:"userEmail"`
+//	UserRemember bool   `json:"userRemember"`
+
+func (u *User) AddUser(user User) error {
+	connStr := "host=localhost port=5432 user=test password=12345 dbname=hw6 sslmode=disable"
+	db, err := sql.Open("postgres", connStr)
+	defer db.Close()
+
+	if err != nil {
+		return err
+	}
+
+	HashPassword, err := HashPassword(user.Password)
 
 	if err != nil {
 		return err

@@ -10,25 +10,8 @@ services:
       - "5432:5432"
     volumes:
       - ./migration:/docker-entrypoint-initdb.d/
+      - pgdata:/var/lib/postgresql/data
     restart: always
-#  app:
-#    image: golang:latest
-#    volumes:
-#      - ./:/app
-#    working_dir: /app
-#    command: go run main.go
-#    environment:
-#      - DATABASE_URL=postgres://myuser:mypassword@db:5432/mydatabase?sslmode=disable
-#    depends_on:
-#      - db
-#
-#  app:
-#    build: .
-#    depends_on:
-#      - db
-#    volumes:
-#      - ./migrations:/migrations
-#    entrypoint: [ "sh", "-c", "migrate -path /migrations -database postgres://myuser:mypassword@db:5432/mydatabase?sslmode=disable up && exec your_app_command" ]
-#
-#volumes:
-#  data_in_postgres:
+
+volumes:
+  pgdata:

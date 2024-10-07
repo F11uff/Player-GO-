@@ -36,7 +36,7 @@ func CreateJWTToken() {
 func CreateJWTPayload() JWTPayload {
 	var db sql.DB
 
-	connStr :=
+	connStr := ""
 
 
 
