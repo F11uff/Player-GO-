@@ -24,10 +24,17 @@ func CreateJWTTokenFromJSON(inputJSON string) (string, error) {
 
 }
 
-func CreateJWTToken() {
-	Header := JWTHeader{"RS256", "JWT"}
-	Payload := CreateJWTPayload()
+func CreateJWTToken() JWT {
 
+	JWTToken := JWT{
+		Header:  JWTHeader{"RS256", "JWT"},
+		Payload: CreateJWTPayload(),
+	}
+
+	//Header := JWTHeader{"RS256", "JWT"}
+	//Payload := CreateJWTPayload()
+
+	return JWTToken
 }
 
 // Время выдачи токена, время истечения токена

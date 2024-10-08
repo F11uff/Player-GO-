@@ -14,7 +14,6 @@ type POSTUserRep struct {
 }
 
 // Подключаться к бд надо здесь
-
 func (rep *POSTUserRep) GetUserId(userID string) (user.User, error) {
 	var user user.User
 
