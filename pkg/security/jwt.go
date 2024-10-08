@@ -1,8 +1,7 @@
 package security
 
 import (
-	"database/sql"
-	"time"
+	_ "database/sql"
 )
 
 type JWT struct {
@@ -17,9 +16,8 @@ type JWTHeader struct {
 }
 
 type JWTPayload struct {
-	Sub string `json:"sub"`
-	Iat int64  `json:"iat"`
-	Exp int64  `json:"exp"`
+	UserID   string `json:"user_id"`
+	Username string `json:"username"`
 }
 
 func CreateJWTTokenFromJSON(inputJSON string) (string, error) {
@@ -32,19 +30,11 @@ func CreateJWTToken() {
 
 }
 
-// Index из бд, время выдачи токена, время истечения токена
+// Время выдачи токена, время истечения токена
 func CreateJWTPayload() JWTPayload {
-	var db sql.DB
+	//var _ sql.DB // Изменить на db
 
-	connStr := ""
-
-
-
-	Payload := JWTPayload{
-		Sub: ,
-		Iat: time.Now().Unix(),
-		Exp: time.Now().Add(time.Hour * 12).Unix(),
-	}
+	Payload := JWTPayload{}
 
 	return Payload
 }

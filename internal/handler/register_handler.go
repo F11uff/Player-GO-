@@ -1,10 +1,10 @@
 package handler
 
 import (
-	"fmt"
 	"github.com/gofiber/fiber/v2"
 	"net/http"
 	"player/internal/storage/postgresql/user"
+	"strings"
 )
 
 func RegisterHandler(ctx *fiber.Ctx) error {
@@ -20,7 +20,10 @@ func PostRegisterHandler(ctx *fiber.Ctx) error {
 		return ctx.Status(http.StatusBadRequest).JSON(fiber.Map{"error": "Invalid JSON"})
 	}
 
-	fmt.Println("logs : ", newUser)
+	if err := strings.Contains(newUser.Email, "@"); !err {
+
+		return ctx.Status(http.StatusBadRequest).JSON(fiber.Map{"error": "Invalid email"})
+	}
 
 	if err := newUser.AddUser(newUser); err != nil {
 

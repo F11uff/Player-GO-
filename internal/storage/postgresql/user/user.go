@@ -2,7 +2,9 @@ package user
 
 import (
 	"database/sql"
+	"fmt"
 	"golang.org/x/crypto/bcrypt"
+	"player/internal/config"
 )
 
 type User struct {
@@ -12,13 +14,11 @@ type User struct {
 	Remember bool   `json:"userRemember"`
 }
 
-//	UserLogin    string `json:"userLogin"`    // Логин пользователя
-//	UserPassword string `json:"userPassword"` // Пароль пользователя
-//	UserEmail    string `json:"userEmail"`
-//	UserRemember bool   `json:"userRemember"`
-
 func (u *User) AddUser(user User) error {
-	connStr := "host=localhost port=5432 user=test password=12345 dbname=hw6 sslmode=disable"
+	cnf := config.DefaultConfig()
+
+	connStr := fmt.Sprintf("host=localhost port=%s user=%s password=%s dbname=%s sslmode=%s",
+		cnf.DBConfig.Port, cnf.DBConfig.User, cnf.DBConfig.Password, cnf.DBConfig.DBName, cnf.DBConfig.SslMode)
 	db, err := sql.Open("postgres", connStr)
 	defer db.Close()
 
