@@ -14,8 +14,8 @@ type POSTUserRep struct {
 }
 
 // Подключаться к бд надо здесь
-func (rep *POSTUserRep) GetUserId(userID string) (user.User, error) {
-	var user user.User
+func (rep *POSTUserRep) GetUserId(userID string) (user.UserRegistration, error) {
+	var user user.UserRegistration
 
 	sqlReq := `SELECT id, username FROM users WHERE user_id = ?`
 }

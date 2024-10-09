@@ -7,14 +7,20 @@ import (
 	"player/internal/config"
 )
 
-type User struct {
+type UserRegistration struct {
 	Username string `json:"userLogin"`
 	Password string `json:"userPassword"`
 	Email    string `json:"userEmail"`
 	Remember bool   `json:"userRemember"`
 }
 
-func (u *User) AddUser(user User) error {
+type UserLogin struct {
+	Username string `json:"userLogin"`
+	Password string `json:"userPassword"`
+	Remember bool   `json:"userRemember"`
+}
+
+func (u *UserRegistration) AddUser(user UserRegistration) error {
 	cnf := config.DefaultConfig()
 
 	connStr := fmt.Sprintf("host=localhost port=%s user=%s password=%s dbname=%s sslmode=%s",
@@ -39,6 +45,11 @@ func (u *User) AddUser(user User) error {
 	if err != nil {
 		return err
 	}
+
+	return nil
+}
+
+func (u *UserLogin) AuthenticateUser(username string, password string) error {
 
 	return nil
 }

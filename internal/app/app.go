@@ -50,9 +50,8 @@ func OpenApp() {
 
 	app.Static("/", "../../web/build")
 
-	app.Get("/register", handler.RegisterHandler)
-
-	app.Post("/register", handler.PostRegisterHandler)
+	app.Post("/", handler.PostLoginHandler)
+	app.Post("/registration", handler.PostRegisterHandler)
 
 	fmt.Println(cfg)
 

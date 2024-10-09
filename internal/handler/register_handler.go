@@ -7,13 +7,8 @@ import (
 	"strings"
 )
 
-func RegisterHandler(ctx *fiber.Ctx) error {
-
-	return ctx.SendFile("../../web/build/index.html")
-}
-
 func PostRegisterHandler(ctx *fiber.Ctx) error {
-	var newUser user.User
+	var newUser user.UserRegistration
 
 	if err := ctx.BodyParser(&newUser); err != nil {
 
@@ -30,5 +25,5 @@ func PostRegisterHandler(ctx *fiber.Ctx) error {
 		return ctx.Status(http.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to add user"})
 	}
 
-	return ctx.JSON(fiber.Map{"message": "User registered successfully!"})
+	return ctx.JSON(fiber.Map{"message": "UserRegistration registered successfully!"})
 }
