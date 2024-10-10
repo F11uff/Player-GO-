@@ -48,12 +48,14 @@ func OpenApp() {
 	app := fiber.New()
 	cfg := config.DefaultConfig()
 
+	fmt.Println("Loading config...")
+
 	app.Static("/", "../../web/build")
+
+	//// СДЕЛАТЬ СЛЕДУЮЩИЕ СТРОЧКИ В ГОРУТИНЕ !!!!!!!!!!!!!!!!!!
 
 	app.Post("/", handler.PostLoginHandler)
 	app.Post("/registration", handler.PostRegisterHandler)
-
-	fmt.Println(cfg)
 
 	if err := app.Listen(cfg.HTTPServerConfig.Address); err != nil {
 		fmt.Printf("Ошибка запуска сервера: %v\n", err)

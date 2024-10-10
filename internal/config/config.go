@@ -1,7 +1,6 @@
 package config
 
 import (
-	"fmt"
 	"github.com/ilyakaznacheev/cleanenv"
 	"log"
 	"os"
@@ -30,8 +29,6 @@ type DBConfig struct {
 
 func DefaultConfig() Config {
 	configPath := "../../config/config.yaml"
-
-	fmt.Println(configPath)
 
 	if _, err := os.Stat(configPath); os.IsNotExist(err) {
 		log.Fatal("CONFIG_PATH does not exist")

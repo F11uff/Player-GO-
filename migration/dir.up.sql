@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS users (
                                      Id SERIAL PRIMARY KEY,
                                      Username VARCHAR NOT NULL UNIQUE,
                                      Email VARCHAR NOT NULL UNIQUE,
-                                     HashPassword VARCHAR NOT NULL UNIQUE
+                                     HashPassword VARCHAR NOT NULL
 );
 
 GRANT ALL PRIVILEGES ON SCHEMA public TO test;

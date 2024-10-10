@@ -11,11 +11,15 @@ func PostLoginHandler(ctx *fiber.Ctx) error {
 
 	if err := ctx.BodyParser(&checkUser); err != nil {
 
-		return ctx.JSON(fiber.Map{"status": fiber.StatusBadRequest})
+		return ctx.JSON(fiber.Map{"error": fiber.StatusBadRequest})
 	}
 
-	fmt.Println(checkUser)
+	error := checkUser.AuthenticateUser(checkUser)
 
-	fmt.Println("wfvwrfvcerwfe")
-	return ctx.JSON(fiber.Map{})
+	if error != nil {
+		fmt.Println(error)
+		return ctx.JSON(fiber.Map{"error": fiber.StatusUnauthorized})
+	}
+
+	return ctx.JSON(fiber.Map{"message": "Password correct"})
 }
