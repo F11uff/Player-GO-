@@ -50,7 +50,7 @@ func (u *UserRegistration) AddUser(user UserRegistration) error {
 	return nil
 }
 
-func (u *UserLogin) AuthenticateUser(user UserLogin) (error, string) {
+func (u *UserLogin) AuthenticateUser(user UserLogin) (string, error) {
 	cnf := config.DefaultConfig()
 
 	connStr := fmt.Sprintf("host=localhost port=%s user=%s password=%s dbname=%s sslmode=%s",
@@ -62,7 +62,7 @@ func (u *UserLogin) AuthenticateUser(user UserLogin) (error, string) {
 	defer db.Close()
 
 	if err != nil {
-		return err, ""
+		return "", err
 	}
 
 	sqlRequest := `SELECT hashpassword FROM users WHERE Username=$1`
@@ -75,16 +75,16 @@ func (u *UserLogin) AuthenticateUser(user UserLogin) (error, string) {
 	for rows.Next() {
 
 		if err = rows.Scan(&hashPassword); err != nil {
-			return err, ""
+			return "", err
 		}
 	}
 
 	if err = bcrypt.CompareHashAndPassword([]byte(hashPassword), []byte(user.Password)); err != nil {
 
-		return errors.New("Invalid username or password"), ""
+		return "", errors.New("Invalid username or password")
 	}
 
-	return nil, security.CreateJWTToken(user.Password, user.Username)
+	return security.CreateJWTToken(user.Password, user.Username), nil
 }
 
 func HashPassword(pass string) (string, error) {

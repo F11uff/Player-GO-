@@ -2,7 +2,7 @@ package security
 
 import "github.com/dgrijalva/jwt-go"
 
-func CreateJWTToken(password, username string) (string) {
+func CreateJWTToken(password, username string) string {
 	token := jwt.New(jwt.SigningMethodHS256)
 
 	headerClaims := token.Claims.(jwt.MapClaims)

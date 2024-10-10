@@ -14,7 +14,7 @@ func PostLoginHandler(ctx *fiber.Ctx) error {
 		return ctx.JSON(fiber.Map{"error": fiber.StatusBadRequest})
 	}
 
-	error, token := checkUser.AuthenticateUser(checkUser)
+	token, error := checkUser.AuthenticateUser(checkUser)
 
 	fmt.Println(token)
 
@@ -24,5 +24,5 @@ func PostLoginHandler(ctx *fiber.Ctx) error {
 		return ctx.JSON(fiber.Map{"error": fiber.StatusUnauthorized})
 	}
 
-	return ctx.JSON(fiber.Map{"message": "Password correct"})
+	return ctx.JSON(fiber.Map{"message": "Password correct", "token": token})
 }

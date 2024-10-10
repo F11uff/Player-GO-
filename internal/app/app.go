@@ -48,13 +48,11 @@ func OpenApp() {
 	app := fiber.New()
 	cfg := config.DefaultConfig()
 
-	fmt.Println("Loading config...")
-
 	app.Static("/", "../../web/build")
 
 	//// СДЕЛАТЬ СЛЕДУЮЩИЕ СТРОЧКИ В ГОРУТИНЕ !!!!!!!!!!!!!!!!!!
 
-	app.Get("/registration", handler.RegisterHandler)
+	app.Get("/", handler.RegisterHandler)
 
 	app.Post("/", handler.PostLoginHandler)
 	app.Post("/registration", handler.PostRegisterHandler)
