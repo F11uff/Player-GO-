@@ -56,7 +56,9 @@ func (u *UserLogin) AuthenticateUser(user UserLogin) error {
 	connStr := fmt.Sprintf("host=localhost port=%s user=%s password=%s dbname=%s sslmode=%s",
 		cnf.DBConfig.Port, cnf.DBConfig.User, cnf.DBConfig.Password, cnf.DBConfig.DBName, cnf.DBConfig.SslMode)
 	db, err := sql.Open("postgres", connStr)
+
 	err = db.Ping()
+
 	defer db.Close()
 
 	if err != nil {
@@ -77,6 +79,7 @@ func (u *UserLogin) AuthenticateUser(user UserLogin) error {
 	}
 
 	if err = bcrypt.CompareHashAndPassword([]byte(hashPassword), []byte(user.Password)); err != nil {
+
 		return errors.New("Invalid username or password")
 	}
 

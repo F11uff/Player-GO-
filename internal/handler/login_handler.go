@@ -18,6 +18,7 @@ func PostLoginHandler(ctx *fiber.Ctx) error {
 
 	if error != nil {
 		fmt.Println(error)
+
 		return ctx.JSON(fiber.Map{"error": fiber.StatusUnauthorized})
 	}
 
