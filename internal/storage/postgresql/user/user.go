@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"golang.org/x/crypto/bcrypt"
 	"player/internal/config"
+	"player/pkg/security"
 )
 
 type UserRegistration struct {
@@ -18,7 +19,6 @@ type UserRegistration struct {
 type UserLogin struct {
 	Username string `json:"userLogin"`
 	Password string `json:"userPassword"`
-	//Remember bool   `json:"userRemember"`
 }
 
 func (u *UserRegistration) AddUser(user UserRegistration) error {
@@ -50,7 +50,7 @@ func (u *UserRegistration) AddUser(user UserRegistration) error {
 	return nil
 }
 
-func (u *UserLogin) AuthenticateUser(user UserLogin) error {
+func (u *UserLogin) AuthenticateUser(user UserLogin) (error, string) {
 	cnf := config.DefaultConfig()
 
 	connStr := fmt.Sprintf("host=localhost port=%s user=%s password=%s dbname=%s sslmode=%s",
@@ -62,11 +62,12 @@ func (u *UserLogin) AuthenticateUser(user UserLogin) error {
 	defer db.Close()
 
 	if err != nil {
-		return err
+		return err, ""
 	}
 
 	sqlRequest := `SELECT hashpassword FROM users WHERE Username=$1`
 	rows, err := db.Query(sqlRequest, user.Username)
+
 	defer rows.Close()
 
 	var hashPassword string
@@ -74,16 +75,16 @@ func (u *UserLogin) AuthenticateUser(user UserLogin) error {
 	for rows.Next() {
 
 		if err = rows.Scan(&hashPassword); err != nil {
-			return err
+			return err, ""
 		}
 	}
 
 	if err = bcrypt.CompareHashAndPassword([]byte(hashPassword), []byte(user.Password)); err != nil {
 
-		return errors.New("Invalid username or password")
+		return errors.New("Invalid username or password"), ""
 	}
 
-	return nil
+	return nil, security.CreateJWTToken(user.Password, user.Username)
 }
 
 func HashPassword(pass string) (string, error) {
