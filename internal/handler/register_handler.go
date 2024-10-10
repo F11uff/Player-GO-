@@ -7,6 +7,10 @@ import (
 	"strings"
 )
 
+func RegisterHandler(ctx *fiber.Ctx) error {
+	return ctx.SendFile("../../web/build/index.html")
+}
+
 func PostRegisterHandler(ctx *fiber.Ctx) error {
 	var newUser user.UserRegistration
 

@@ -54,6 +54,8 @@ func OpenApp() {
 
 	//// СДЕЛАТЬ СЛЕДУЮЩИЕ СТРОЧКИ В ГОРУТИНЕ !!!!!!!!!!!!!!!!!!
 
+	app.Get("/registration", handler.RegisterHandler)
+
 	app.Post("/", handler.PostLoginHandler)
 	app.Post("/registration", handler.PostRegisterHandler)
 
