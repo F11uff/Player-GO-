@@ -1,47 +1,21 @@
 package security
 
-import (
-	_ "database/sql"
-)
+import "github.com/dgrijalva/jwt-go"
 
-type JWT struct {
-	Header    JWTHeader  `json:"header"`
-	Payload   JWTPayload `json:"payload"`
-	Signature string     `json:"signature"`
-}
+func CreateJWTToken(password, username string) (string) {
+	token := jwt.New(jwt.SigningMethodHS256)
 
-type JWTHeader struct {
-	Alg string
-	Typ string
-}
+	headerClaims := token.Claims.(jwt.MapClaims)
 
-type JWTPayload struct {
-	UserID   string `json:"user_id"`
-	Username string `json:"username"`
-}
+	headerClaims["username"] = username
+	headerClaims["password"] = password
 
-func CreateJWTTokenFromJSON(inputJSON string) (string, error) {
+	secretKey := []byte("secretKey")
 
-}
-
-func CreateJWTToken() JWT {
-
-	JWTToken := JWT{
-		Header:  JWTHeader{"RS256", "JWT"},
-		Payload: CreateJWTPayload(),
+	tokenString, err := token.SignedString(secretKey)
+	if err != nil {
+		return ""
 	}
 
-	//Header := JWTHeader{"RS256", "JWT"}
-	//Payload := CreateJWTPayload()
-
-	return JWTToken
-}
-
-// Время выдачи токена, время истечения токена
-func CreateJWTPayload() JWTPayload {
-	//var _ sql.DB // Изменить на db
-
-	Payload := JWTPayload{}
-
-	return Payload
+	return tokenString
 }
