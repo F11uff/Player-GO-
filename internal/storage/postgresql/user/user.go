@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"golang.org/x/crypto/bcrypt"
 	"player/internal/config"
+	"player/internal/services"
 	"player/pkg/security"
 )
 
@@ -33,7 +34,7 @@ func (u *UserRegistration) AddUser(user UserRegistration) error {
 		return err
 	}
 
-	HashPassword, err := HashPassword(user.Password)
+	HashPassword, err := services.HashPassword(user.Password)
 
 	if err != nil {
 		return err
@@ -70,6 +71,10 @@ func (u *UserLogin) AuthenticateUser(user UserLogin) (string, error) {
 
 	defer rows.Close()
 
+	if err != nil {
+		return "", err
+	}
+
 	var hashPassword string
 
 	for rows.Next() {
@@ -85,10 +90,4 @@ func (u *UserLogin) AuthenticateUser(user UserLogin) (string, error) {
 	}
 
 	return security.CreateJWTToken(user.Password, user.Username), nil
-}
-
-func HashPassword(pass string) (string, error) {
-	HashPassword, err := bcrypt.GenerateFromPassword([]byte(pass), bcrypt.DefaultCost)
-
-	return string(HashPassword), err
 }

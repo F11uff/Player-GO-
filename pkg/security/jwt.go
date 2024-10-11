@@ -13,6 +13,7 @@ func CreateJWTToken(password, username string) string {
 	secretKey := []byte("secretKey")
 
 	tokenString, err := token.SignedString(secretKey)
+	
 	if err != nil {
 		return ""
 	}
