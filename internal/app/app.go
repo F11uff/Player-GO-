@@ -5,7 +5,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	_ "github.com/lib/pq"
 	"player/internal/config"
-	"player/internal/handler"
+	"player/internal/transport/REST/handler"
 	"sync"
 )
 
