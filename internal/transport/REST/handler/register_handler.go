@@ -19,7 +19,7 @@ func PostRegisterHandler(ctx *fiber.Ctx) error {
 		return ctx.Status(http.StatusBadRequest).JSON(fiber.Map{"error": "Invalid JSON"})
 	}
 
-	if err := strings.Contains(newUser.Email, "@"); !err {
+	if err := strings.Contains(newUser.Email, "@."); !err {
 
 		return ctx.Status(http.StatusBadRequest).JSON(fiber.Map{"error": "Invalid email"})
 	}
@@ -29,5 +29,5 @@ func PostRegisterHandler(ctx *fiber.Ctx) error {
 		return ctx.Status(http.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to add user"})
 	}
 
-	return ctx.JSON(fiber.Map{"message": "UserRegistration registered successfully!"})
+	return ctx.JSON(fiber.Map{"message": "OK"})
 }

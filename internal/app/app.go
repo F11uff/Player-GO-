@@ -16,7 +16,7 @@ func OpenApp() {
 
 	app.Static("/", "../../web/build")
 
-	wq.Add(1)
+	wq.Add(2)
 	go func() {
 		defer wq.Done()
 
@@ -24,12 +24,17 @@ func OpenApp() {
 
 		app.Post("/", handler.PostLoginHandler)
 		app.Post("/registration", handler.PostRegisterHandler)
+	}()
+
+	go func() {
+		defer wq.Done()
 
 		if err := app.Listen(cfg.HTTPServerConfig.Address); err != nil {
 
 			fmt.Printf("Ошибка запуска сервера: %v\n", err)
 		}
 	}()
+
 	wq.Wait()
 
 }
