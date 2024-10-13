@@ -19,7 +19,7 @@ func PostRegisterHandler(ctx *fiber.Ctx) error {
 		return ctx.Status(http.StatusBadRequest).JSON(fiber.Map{"error": "Invalid JSON"})
 	}
 
-	if err := strings.Contains(newUser.Email, "@."); !err {
+	if !strings.Contains(newUser.Email, "@") || !strings.Contains(newUser.Email, ".") {
 
 		return ctx.Status(http.StatusBadRequest).JSON(fiber.Map{"error": "Invalid email"})
 	}

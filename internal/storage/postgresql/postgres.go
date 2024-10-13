@@ -1,15 +1,24 @@
 package postgresql
 
-//type Storage struct {
-//	db *sql.DB
-//}
+import (
+	"database/sql"
+	"fmt"
+	"player/internal/config"
+)
 
-//func New(dataBasePath string) (*Storage, error) {
-//	const errorMessage = "postgres.postgres_go.New"
-//
-//	db, err := sql.Open("postgres", dataBasePath)
-//
-//	if err != nil {
-//		return nil, fmt.Errorf("%s: %w", errorMessage, err)
-//	}
-//}
+func OpenDB() (*sql.DB, error) {
+	cnf := config.DefaultConfig()
+	connStr := fmt.Sprintf("host=localhost port=%s user=%s password=%s dbname=%s sslmode=%s",
+		cnf.DBConfig.Port, cnf.DBConfig.User, cnf.DBConfig.Password, cnf.DBConfig.DBName, cnf.DBConfig.SslMode)
+
+	db, err := sql.Open("postgres", connStr)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := db.Ping(); err != nil {
+		return nil, err
+	}
+
+	return db, nil
+}

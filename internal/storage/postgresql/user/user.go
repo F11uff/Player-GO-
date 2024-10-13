@@ -3,12 +3,13 @@ package user
 import (
 	"database/sql"
 	"errors"
-	"fmt"
 	"golang.org/x/crypto/bcrypt"
-	"player/internal/config"
 	"player/internal/services"
+	"player/internal/storage/postgresql"
 	"player/pkg/security"
 )
+
+var db *sql.DB
 
 type UserRegistration struct {
 	Username string `json:"userLogin"`
@@ -23,20 +24,32 @@ type UserLogin struct {
 }
 
 func (u *UserRegistration) AddUser(user UserRegistration) error {
-	cnf := config.DefaultConfig()
-
-	connStr := fmt.Sprintf("host=localhost port=%s user=%s password=%s dbname=%s sslmode=%s",
-		cnf.DBConfig.Port, cnf.DBConfig.User, cnf.DBConfig.Password, cnf.DBConfig.DBName, cnf.DBConfig.SslMode)
-	db, err := sql.Open("postgres", connStr)
-	defer db.Close()
+	var err error
+	db, err = postgresql.OpenDB()
 
 	if err != nil {
+
 		return err
+	}
+
+	defer db.Close()
+
+	exists, err := user.FindUserForEmail(user, db)
+
+	if err != nil {
+
+		return err
+	}
+
+	if exists {
+
+		return errors.New("A user with this email already exists")
 	}
 
 	HashPassword, err := services.HashPassword(user.Password)
 
 	if err != nil {
+
 		return err
 	}
 
@@ -45,6 +58,7 @@ func (u *UserRegistration) AddUser(user UserRegistration) error {
 	_, err = db.Exec(sqlRequest, user.Username, user.Email, HashPassword)
 
 	if err != nil {
+
 		return err
 	}
 
@@ -52,19 +66,15 @@ func (u *UserRegistration) AddUser(user UserRegistration) error {
 }
 
 func (u *UserLogin) AuthenticateUser(user UserLogin) (string, error) {
-	cnf := config.DefaultConfig()
-
-	connStr := fmt.Sprintf("host=localhost port=%s user=%s password=%s dbname=%s sslmode=%s",
-		cnf.DBConfig.Port, cnf.DBConfig.User, cnf.DBConfig.Password, cnf.DBConfig.DBName, cnf.DBConfig.SslMode)
-	db, err := sql.Open("postgres", connStr)
-
-	err = db.Ping()
-
-	defer db.Close()
+	var err error
+	db, err = postgresql.OpenDB()
 
 	if err != nil {
+
 		return "", err
 	}
+
+	defer db.Close()
 
 	sqlRequest := `SELECT hashpassword FROM users WHERE Username=$1`
 	rows, err := db.Query(sqlRequest, user.Username)
@@ -72,6 +82,7 @@ func (u *UserLogin) AuthenticateUser(user UserLogin) (string, error) {
 	defer rows.Close()
 
 	if err != nil {
+
 		return "", err
 	}
 
@@ -90,4 +101,24 @@ func (u *UserLogin) AuthenticateUser(user UserLogin) (string, error) {
 	}
 
 	return security.CreateJWTToken(user.Password, user.Username), nil
+}
+
+func (u *UserRegistration) FindUserForEmail(userStructReg UserRegistration, db2 *sql.DB) (bool, error) {
+	var err error
+	var email string
+
+	sqlRequest := `SELECT Email FROM users WHERE Email=$1`
+
+	err = db2.QueryRow(sqlRequest, userStructReg.Email).Scan(&email)
+
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+
+			return false, nil
+		}
+
+		return false, err
+	}
+
+	return true, nil
 }
