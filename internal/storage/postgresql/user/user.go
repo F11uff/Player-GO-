@@ -28,7 +28,6 @@ func (u *UserRegistration) AddUser(user UserRegistration) error {
 	db, err = postgresql.OpenDB()
 
 	if err != nil {
-
 		return err
 	}
 
@@ -37,28 +36,23 @@ func (u *UserRegistration) AddUser(user UserRegistration) error {
 	exists, err := user.FindUserForEmail(user, db)
 
 	if err != nil {
-
 		return err
 	}
 
 	if exists {
-
 		return errors.New("A user with this email already exists")
 	}
 
 	HashPassword, err := services.HashPassword(user.Password)
 
 	if err != nil {
-
 		return err
 	}
 
 	sqlRequest := `INSERT INTO users (Username, Email, HashPassword) VALUES ($1, $2, $3)`
-
 	_, err = db.Exec(sqlRequest, user.Username, user.Email, HashPassword)
 
 	if err != nil {
-
 		return err
 	}
 
@@ -70,7 +64,6 @@ func (u *UserLogin) AuthenticateUser(user UserLogin) (string, error) {
 	db, err = postgresql.OpenDB()
 
 	if err != nil {
-
 		return "", err
 	}
 
@@ -82,21 +75,18 @@ func (u *UserLogin) AuthenticateUser(user UserLogin) (string, error) {
 	defer rows.Close()
 
 	if err != nil {
-
 		return "", err
 	}
 
 	var hashPassword string
 
 	for rows.Next() {
-
 		if err = rows.Scan(&hashPassword); err != nil {
 			return "", err
 		}
 	}
 
 	if err = bcrypt.CompareHashAndPassword([]byte(hashPassword), []byte(user.Password)); err != nil {
-
 		return "", errors.New("Invalid username or password")
 	}
 
@@ -108,12 +98,10 @@ func (u *UserRegistration) FindUserForEmail(userStructReg UserRegistration, db2 
 	var email string
 
 	sqlRequest := `SELECT Email FROM users WHERE Email=$1`
-
 	err = db2.QueryRow(sqlRequest, userStructReg.Email).Scan(&email)
 
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-
 			return false, nil
 		}
 
