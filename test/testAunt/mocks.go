@@ -4,7 +4,6 @@ package testAunt
 
 import (
 	"errors"
-	"fmt"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -27,10 +26,7 @@ func (m *UserLoginModel) AuthenticateUserMock(user UserLoginMock) (string, error
 		return "", err
 	}
 
-	fmt.Println(user)
-	fmt.Println(hashPassword)
-
-	if err := bcrypt.CompareHashAndPassword([]byte(hashPassword), []byte(user.Password)); err != nil {
+	if err = bcrypt.CompareHashAndPassword([]byte(hashPassword), []byte(user.Password)); err != nil {
 		return "", errors.New("wrong password")
 	}
 

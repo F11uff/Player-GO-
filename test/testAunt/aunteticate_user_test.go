@@ -2,6 +2,7 @@ package testAunt
 
 import (
 	"github.com/golang/mock/gomock"
+	"player/internal/services"
 	"player/test/testAunt/mocks"
 	"testing"
 )
@@ -13,7 +14,8 @@ func TestAunteticateUser_Success(t *testing.T) {
 
 	username := "test"
 	password := "testpassword"
-	hashedpassword := "$2a$10$e0MYW8dO7h7Juj.7yC1wV.fzG5NQRC8W8yGnD6bgAvfJfw0m8DQSy"
+
+	hashedpassword, _ := services.HashPassword("testpassword")
 
 	mock.EXPECT().GetHashPassword(username).Return(hashedpassword, nil)
 
@@ -31,6 +33,38 @@ func TestAunteticateUser_Success(t *testing.T) {
 
 	if token == "" {
 		t.Fatalf("Error - token is empty")
+	}
+
+}
+
+func TestAunteticateUser_FailPassword(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mock := mocks.NewMockModel(ctrl)
+
+	username := "test"
+	password := "testpasswordfail"
+	hashedpassword, err := services.HashPassword("testpassword")
+
+	mock.EXPECT().GetHashPassword(username).Return(hashedpassword, nil)
+
+	userLoginMock := UserLoginMock{
+		Username: username,
+		Password: password,
+	}
+
+	auth := UserLoginModel{Model: mock}
+	token, err := auth.AuthenticateUserMock(userLoginMock)
+
+	if err == nil {
+		t.Fatalf("Error - %v", err)
+	}
+
+	if err.Error() != "wrong password" {
+		t.Fatalf("Expected error 'wrong password', got '%v'", err)
+	}
+
+	if token != "" {
+		t.Fatalf("Error - %v", err)
 	}
 
 }
