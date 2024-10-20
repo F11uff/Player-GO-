@@ -15,9 +15,9 @@ func TestAunteticateUser_Success(t *testing.T) {
 	username := "test"
 	password := "testpassword"
 
-	hashedpassword, _ := services.HashPassword("testpassword")
+	hashpassword, _ := services.HashPassword("testpassword")
 
-	mock.EXPECT().GetHashPassword(username).Return(hashedpassword, nil)
+	mock.EXPECT().GetHashPassword(username).Return(hashpassword, nil)
 
 	userLoginMock := UserLoginMock{
 		Username: username,
