@@ -1,4 +1,4 @@
-//go:generate mockgen -source=mocks.go -destination=mocks/mocksReg.go -package=mocks
+//go:generate mockgen -source=mocks.go -destination=mockReg/mocksReg.go -package=mocks
 
 package testReg
 
@@ -8,11 +8,7 @@ import (
 )
 
 type DBMocks interface {
-	QueryRow(query string, args ...interface{}) RowMocks
-}
-
-type RowMocks interface {
-	Scan(dest ...interface{}) error
+	QueryRow(query string, args ...interface{}) (string, error) // Возвращает email и ошибку
 }
 
 type UserRegistrationMocks struct {
@@ -20,9 +16,8 @@ type UserRegistrationMocks struct {
 }
 
 func (u *UserRegistrationMocks) FindUserForEmailMocks(db DBMocks) (bool, error) {
-	var email string
 	sqlRequest := `SELECT Email FROM users WHERE Email=$1`
-	err := db.QueryRow(sqlRequest, u.Email).Scan(&email)
+	email, err := db.QueryRow(sqlRequest, u.Email)
 
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
@@ -31,5 +26,5 @@ func (u *UserRegistrationMocks) FindUserForEmailMocks(db DBMocks) (bool, error) 
 		return false, err
 	}
 
-	return true, nil
+	return email == u.Email, nil
 }

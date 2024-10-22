@@ -5,7 +5,6 @@
 package mocks
 
 import (
-	testReg "player/test/testReg"
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
@@ -35,15 +34,16 @@ func (m *MockDBMocks) EXPECT() *MockDBMocksMockRecorder {
 }
 
 // QueryRow mocks base method.
-func (m *MockDBMocks) QueryRow(query string, args ...interface{}) testReg.RowMocks {
+func (m *MockDBMocks) QueryRow(query string, args ...interface{}) (string, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{query}
 	for _, a := range args {
 		varargs = append(varargs, a)
 	}
 	ret := m.ctrl.Call(m, "QueryRow", varargs...)
-	ret0, _ := ret[0].(testReg.RowMocks)
-	return ret0
+	ret0, _ := ret[0].(string)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
 }
 
 // QueryRow indicates an expected call of QueryRow.
@@ -51,45 +51,4 @@ func (mr *MockDBMocksMockRecorder) QueryRow(query interface{}, args ...interface
 	mr.mock.ctrl.T.Helper()
 	varargs := append([]interface{}{query}, args...)
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "QueryRow", reflect.TypeOf((*MockDBMocks)(nil).QueryRow), varargs...)
-}
-
-// MockRowMocks is a mock of RowMocks interface.
-type MockRowMocks struct {
-	ctrl     *gomock.Controller
-	recorder *MockRowMocksMockRecorder
-}
-
-// MockRowMocksMockRecorder is the mock recorder for MockRowMocks.
-type MockRowMocksMockRecorder struct {
-	mock *MockRowMocks
-}
-
-// NewMockRowMocks creates a new mock instance.
-func NewMockRowMocks(ctrl *gomock.Controller) *MockRowMocks {
-	mock := &MockRowMocks{ctrl: ctrl}
-	mock.recorder = &MockRowMocksMockRecorder{mock}
-	return mock
-}
-
-// EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockRowMocks) EXPECT() *MockRowMocksMockRecorder {
-	return m.recorder
-}
-
-// Scan mocks base method.
-func (m *MockRowMocks) Scan(dest ...interface{}) error {
-	m.ctrl.T.Helper()
-	varargs := []interface{}{}
-	for _, a := range dest {
-		varargs = append(varargs, a)
-	}
-	ret := m.ctrl.Call(m, "Scan", varargs...)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// Scan indicates an expected call of Scan.
-func (mr *MockRowMocksMockRecorder) Scan(dest ...interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Scan", reflect.TypeOf((*MockRowMocks)(nil).Scan), dest...)
 }

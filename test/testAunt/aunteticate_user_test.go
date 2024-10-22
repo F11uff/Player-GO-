@@ -3,13 +3,12 @@ package testAunt
 import (
 	"github.com/golang/mock/gomock"
 	"player/internal/services"
-	"player/test/testAunt/mocks"
+	mocks "player/test/testAunt/mocksAunt"
 	"testing"
 )
 
 func TestAunteticateUser_Success(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	//defer ctrl.Finish()
 	mock := mocks.NewMockModel(ctrl)
 
 	username := "test"

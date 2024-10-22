@@ -1,4 +1,4 @@
-//go:generate mockgen -source=mocks.go -destination=mocks/generation_mocks.go -package=mocks
+//go:generate mockgen -source=mocks.go -destination=mocksAunt/mocksAunt.go -package=mocks
 
 package testAunt
 
