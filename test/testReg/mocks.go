@@ -8,7 +8,7 @@ import (
 )
 
 type DBMocks interface {
-	QueryRow(query string, args ...interface{}) (string, error) // Возвращает email и ошибку
+	QueryRow(query string, args ...interface{}) (string, error)
 }
 
 type UserRegistrationMocks struct {

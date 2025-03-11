@@ -1,6 +1,7 @@
 package testReg
 
 import (
+	"errors"
 	"github.com/golang/mock/gomock"
 	mocks "player/test/testReg/mockReg"
 	"testing"
@@ -34,4 +35,24 @@ func TestFindUserForEmailMocks_Success(t *testing.T) {
 	if !reg {
 		t.Fatalf("FindUserForEmailMocks expected true, got %v", reg)
 	}
+}
+
+func TestFindUserForEmailMocks_Fail(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mock := mocks.NewMockDBMocks(ctrl)
+
+	user := UserRegistrationMocks{Email: ""}
+
+	mock.EXPECT().QueryRow(gomock.Any(), gomock.Any()).Return("", errors.New("test error")).Times(1)
+
+	reg, err := user.FindUserForEmailMocks(mock)
+
+	if err == nil {
+		t.Fatalf("FindUserForEmailMocks expected error, got %v", reg)
+	}
+
+	if reg == true {
+		t.Fatalf("FindUserForEmailMocks expected false, got %v", reg)
+	}
+
 }
